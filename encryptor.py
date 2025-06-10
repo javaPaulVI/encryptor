@@ -2,6 +2,7 @@ import base64
 import time
 import os
 import hmac
+from datetime import datetime, timezone
 from cryptography.hazmat.primitives import hashes
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -54,63 +55,63 @@ class Encryptor:
         token_bytes = number.to_bytes(length, byteorder='big')
         return token_bytes.decode('utf-8', errors='replace')
 
-def encrypt_message(self, message: str) -> str:
-    current_minute = int(time.time() // 60)
-    secondary_key = self.derive_secondary_key(current_minute)
-    fernet = Fernet(secondary_key)
-    payload = f"{current_minute}{self.SEPARATOR}{message}".encode()
-    token = fernet.encrypt(payload).decode()
-    b64 = base64.b64encode(token.encode()).decode()
-
-    random_prefix = base64.b64encode(os.urandom(4)).decode().replace("=", "")
-    xor_key = os.urandom(8)
-    xored = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(b64.encode())])
-    hex_result = xored.hex()
-
-    # Include current_minute explicitly in the token
-    result = f"{random_prefix}{self.SEPARATOR}{base64.b64encode(xor_key).decode().replace('=', '')}{self.SEPARATOR}{current_minute}{self.SEPARATOR}{hex_result}"
-    return self.token_to_numbers(result)
-
-
-def decrypt_message(self, encoded_token: str) -> tuple[str, int]:
-    encoded_token = self.numbers_to_token(encoded_token)
-    parts = encoded_token.split(self.SEPARATOR)
-    if len(parts) != 4:
-        raise ValueError("Invalid token format")
-
-    _, xor_key_b64, minute_str, hex_data = parts
-
-    if len(xor_key_b64) % 4 != 0:
-        xor_key_b64 += "=" * (4 - len(xor_key_b64) % 4)
-    xor_key = base64.b64decode(xor_key_b64)
-
-    try:
-        encryption_minute = int(minute_str)
-    except ValueError:
-        raise ValueError("Invalid minute value in token")
-
-    xored_data = bytes.fromhex(hex_data)
-    b64_bytes = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(xored_data)])
-    b64 = b64_bytes.decode(errors='replace')
-
-    if len(b64) % 4 != 0:
-        b64 += "=" * (4 - len(b64) % 4)
-
-    token = base64.b64decode(b64).decode(errors='replace')
-
-    # Only try the provided minute ±2
-    for offset in range(-2, 3):
-        try_minute = encryption_minute + offset
-        secondary_key = self.derive_secondary_key(try_minute)
+    def encrypt_message(self, message: str) -> str:
+        current_minute = int(time.time() // 60)
+        secondary_key = self.derive_secondary_key(current_minute)
         fernet = Fernet(secondary_key)
-        try:
-            payload = fernet.decrypt(token.encode()).decode()
-            _, message = payload.split(self.SEPARATOR, 1)
-            return message, encryption_minute
-        except Exception:
-            continue
+        payload = f"{current_minute}{self.SEPARATOR}{message}".encode()
+        token = fernet.encrypt(payload).decode()
+        b64 = base64.b64encode(token.encode()).decode()
 
-    raise ValueError("Unable to decrypt with any valid minute key.")
+        random_prefix = base64.b64encode(os.urandom(4)).decode().replace("=", "")
+        xor_key = os.urandom(8)
+        xored = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(b64.encode())])
+        hex_result = xored.hex()
+
+        # Include current_minute explicitly in the token
+        result = f"{base64.b64encode(os.urandom(4)).decode().replace('=', '')}{self.SEPARATOR}{base64.b64encode(xor_key).decode().replace('=', '')}{self.SEPARATOR}{current_minute}{self.SEPARATOR}{base64.b64encode(os.urandom(4)).decode().replace('=', '')}{self.SEPARATOR}{hex_result}"
+        return self.token_to_numbers(result)
+
+    def decrypt_message(self, encoded_token: str) -> tuple[str, str]:
+        encoded_token = self.numbers_to_token(encoded_token)
+        parts = encoded_token.split(self.SEPARATOR)
+        if len(parts) != 5:
+            raise ValueError("Invalid token format")
+
+        # parts[0] and parts[3] are random and can be ignored
+        _, xor_key_b64, minute_str, _, hex_data = parts
+
+        # Pad Base64 if needed
+        if len(xor_key_b64) % 4 != 0:
+            xor_key_b64 += "=" * (4 - len(xor_key_b64) % 4)
+        xor_key = base64.b64decode(xor_key_b64)
+
+        try:
+            encryption_minute = int(minute_str)
+        except ValueError:
+            raise ValueError("Invalid minute value in token")
+
+        # Decode and XOR the hex-encoded payload
+        xored_data = bytes.fromhex(hex_data)
+        b64_bytes = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(xored_data)])
+        b64 = b64_bytes.decode(errors='replace')
+
+        if len(b64) % 4 != 0:
+            b64 += "=" * (4 - len(b64) % 4)
+
+        token = base64.b64decode(b64).decode(errors='replace')
+
+        # Use the embedded minute to derive the correct key
+        secondary_key = self.derive_secondary_key(encryption_minute)
+        fernet = Fernet(secondary_key)
+        payload = fernet.decrypt(token.encode()).decode()
+        _, message = payload.split(self.SEPARATOR, 1)
+
+        # Convert minute to human-readable UTC time string
+        timestamp = encryption_minute * 60
+        human_readable_time = datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
+
+        return message, human_readable_time
 
 
 def main():
@@ -140,9 +141,8 @@ def main():
         elif choice == "2":
             token = input("Enter token to decrypt: ").strip()
             try:
-                message, key_minute = encryptor.decrypt_message(token)
+                message,_ = encryptor.decrypt_message(token)
                 print(f"\nDecrypted message: {message}")
-                print(f"Decryption key minute: {key_minute}")
             except Exception as e:
                 print(f"Decryption failed: {e}")
         elif choice == "3":
