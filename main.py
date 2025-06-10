@@ -4,7 +4,7 @@ import os
 
 def main():
     primary_key = os.environ.get('PRIMARY_KEY')
-    print(primary_key)
+
     if not primary_key:
         print("Error: PRIMARY_KEY environment variable not set.")
         return
