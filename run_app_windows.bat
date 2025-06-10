@@ -1,2 +1,5 @@
-cmd /k python3 app.py
-start "Encryptor" "http://127.0.0.1:5000"
+@echo off
+start "" "http://127.0.0.1:5000"
+cmd /k python app.py
+
+
