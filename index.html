@@ -1,58 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Encryptor Web Client</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Encryptor Demo</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<h1>Encryptor Interface</h1>
+    <div class="container">
+        <h1>Encryptor Demo</h1>
 
-<label for="inputMessage">Message to encrypt:</label><br />
-<textarea id="inputMessage" rows="4" cols="50"></textarea><br />
-<button onclick="encryptMessage()">Encrypt</button>
+        <section class="box">
+            <h2>Encrypt a Message</h2>
+            <textarea id="encrypt-message" placeholder="Enter message to encrypt..."></textarea>
+            <button id="encrypt-btn">Encrypt</button>
+            <div id="encrypt-result" class="result"></div>
+        </section>
 
-<h3>Encrypted Token:</h3>
-<pre id="encryptedOutput"></pre>
+        <section class="box">
+            <h2>Decrypt a Token</h2>
+            <textarea id="decrypt-token" placeholder="Paste token to decrypt..."></textarea>
+            <button id="decrypt-btn">Decrypt</button>
+            <div id="decrypt-result" class="result"></div>
+        </section>
+    </div>
 
-<label for="inputToken">Token to decrypt:</label><br />
-<textarea id="inputToken" rows="4" cols="50"></textarea><br />
-<button onclick="decryptToken()">Decrypt</button>
-
-<h3>Decrypted Message:</h3>
-<pre id="decryptedOutput"></pre>
-
-<script>
-async function encryptMessage() {
-    const message = document.getElementById('inputMessage').value;
-    const response = await fetch('/encrypt', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message})
-    });
-    const data = await response.json();
-    if (data.error) {
-        alert("Error: " + data.error);
-    } else {
-        document.getElementById('encryptedOutput').textContent = data.encrypted;
-    }
-}
-
-async function decryptToken() {
-    const token = document.getElementById('inputToken').value;
-    const response = await fetch('/decrypt', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({token})
-    });
-    const data = await response.json();
-    if (data.error) {
-        alert("Error: " + data.error);
-    } else {
-        document.getElementById('decryptedOutput').textContent =
-            `Message: ${data.message}\nTimestamp: ${data.timestamp}`;
-    }
-}
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
