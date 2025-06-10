@@ -7,6 +7,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
+import sys
+sys.set_int_max_str_digits(10_000)  # increase from default 4300 to 10,000 digits
 
 
 class Encryptor:

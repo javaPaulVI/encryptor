@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Encryptor Demo</title>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Encryptor</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Encryptor Demo</h1>
+  <div class="container">
+    <h1>Encryptor</h1>
 
-        <section class="box">
-            <h2>Encrypt a Message</h2>
-            <textarea id="encrypt-message" placeholder="Enter message to encrypt..."></textarea>
-            <button id="encrypt-btn">Encrypt</button>
-            <div id="encrypt-result" class="result"></div>
-        </section>
+    <label for="messageInput">Message to encrypt:</label>
+    <textarea id="messageInput" rows="3" placeholder="Type your message here..."></textarea>
 
-        <section class="box">
-            <h2>Decrypt a Token</h2>
-            <textarea id="decrypt-token" placeholder="Paste token to decrypt..."></textarea>
-            <button id="decrypt-btn">Decrypt</button>
-            <div id="decrypt-result" class="result"></div>
-        </section>
-    </div>
+    <button id="encryptBtn">Encrypt</button>
 
-    <script src="script.js"></script>
+    <label for="encryptedOutput">Encrypted:</label>
+    <div id="encryptedOutput" class="output-box"></div>
+
+    <label for="tokenInput">Token to decrypt:</label>
+    <textarea id="tokenInput" rows="3" placeholder="Paste your token here..."></textarea>
+
+    <button id="decryptBtn">Decrypt</button>
+
+    <label for="decryptedOutput">Decrypted message and time:</label>
+    <div id="decryptedOutput" class="output-box"></div>
+  </div>
+
+  <script src="/static/script.js"></script>
 </body>
 </html>
