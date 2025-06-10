@@ -22,11 +22,17 @@ class Encryptor:
 
     def derive_secondary_key(self, minute: int) -> bytes:
         salt = self.generate_salt(minute)
+        minute_str = str(minute)
+        # Original modification of the primary key:
         modified_key = (
             self.primary_key[:4] + "6" +
             self.primary_key[5:-2] + "<" +
             self.primary_key[-1]
         )
+        # Insert minute string in the middle of modified_key
+        mid = len(modified_key) // 2
+        modified_key = modified_key[:mid] + minute_str + modified_key[mid:]
+
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
@@ -48,53 +54,103 @@ class Encryptor:
         token_bytes = number.to_bytes(length, byteorder='big')
         return token_bytes.decode('utf-8', errors='replace')
 
-    def encrypt_message(self, message: str) -> str:
-        current_minute = int(time.time() // 60)
-        secondary_key = self.derive_secondary_key(current_minute)
+def encrypt_message(self, message: str) -> str:
+    current_minute = int(time.time() // 60)
+    secondary_key = self.derive_secondary_key(current_minute)
+    fernet = Fernet(secondary_key)
+    payload = f"{current_minute}{self.SEPARATOR}{message}".encode()
+    token = fernet.encrypt(payload).decode()
+    b64 = base64.b64encode(token.encode()).decode()
+
+    random_prefix = base64.b64encode(os.urandom(4)).decode().replace("=", "")
+    xor_key = os.urandom(8)
+    xored = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(b64.encode())])
+    hex_result = xored.hex()
+
+    # Include current_minute explicitly in the token
+    result = f"{random_prefix}{self.SEPARATOR}{base64.b64encode(xor_key).decode().replace('=', '')}{self.SEPARATOR}{current_minute}{self.SEPARATOR}{hex_result}"
+    return self.token_to_numbers(result)
+
+
+def decrypt_message(self, encoded_token: str) -> tuple[str, int]:
+    encoded_token = self.numbers_to_token(encoded_token)
+    parts = encoded_token.split(self.SEPARATOR)
+    if len(parts) != 4:
+        raise ValueError("Invalid token format")
+
+    _, xor_key_b64, minute_str, hex_data = parts
+
+    if len(xor_key_b64) % 4 != 0:
+        xor_key_b64 += "=" * (4 - len(xor_key_b64) % 4)
+    xor_key = base64.b64decode(xor_key_b64)
+
+    try:
+        encryption_minute = int(minute_str)
+    except ValueError:
+        raise ValueError("Invalid minute value in token")
+
+    xored_data = bytes.fromhex(hex_data)
+    b64_bytes = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(xored_data)])
+    b64 = b64_bytes.decode(errors='replace')
+
+    if len(b64) % 4 != 0:
+        b64 += "=" * (4 - len(b64) % 4)
+
+    token = base64.b64decode(b64).decode(errors='replace')
+
+    # Only try the provided minute ±2
+    for offset in range(-2, 3):
+        try_minute = encryption_minute + offset
+        secondary_key = self.derive_secondary_key(try_minute)
         fernet = Fernet(secondary_key)
-        payload = f"{current_minute}{self.SEPARATOR}{message}".encode()
-        token = fernet.encrypt(payload).decode()
-        b64 = base64.b64encode(token.encode()).decode()
+        try:
+            payload = fernet.decrypt(token.encode()).decode()
+            _, message = payload.split(self.SEPARATOR, 1)
+            return message, encryption_minute
+        except Exception:
+            continue
 
-        random_prefix = base64.b64encode(os.urandom(4)).decode().replace("=", "")
-        xor_key = os.urandom(8)
-        xored = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(b64.encode())])
-        hex_result = xored.hex()
-        result = f"{random_prefix}{self.SEPARATOR}{base64.b64encode(xor_key).decode().replace('=','')}{self.SEPARATOR}{hex_result}"
+    raise ValueError("Unable to decrypt with any valid minute key.")
 
-        return self.token_to_numbers(result)
 
-    def decrypt_message(self, encoded_token: str) -> tuple[str, int]:
-        encoded_token = self.numbers_to_token(encoded_token)
-        parts = encoded_token.split(self.SEPARATOR)
-        if len(parts) != 3:
-            raise ValueError("Invalid token format")
+def main():
+    primary_key = os.environ.get('PRIMARY_KEY')
+    print(primary_key)
+    if not primary_key:
+        print("Error: PRIMARY_KEY environment variable not set.")
+        return
 
-        _, xor_key_b64, hex_data = parts
+    try:
+        encryptor = Encryptor(primary_key)
+    except ValueError as e:
+        print(f"Error: {e}")
+        return
 
-        if len(xor_key_b64) % 4 != 0:
-            xor_key_b64 += "=" * (4 - len(xor_key_b64) % 4)
-        xor_key = base64.b64decode(xor_key_b64)
+    while True:
+        print("\nOptions:")
+        print("1. Encrypt a message")
+        print("2. Decrypt a token")
+        print("3. Exit")
+        choice = input("Choose an option (1/2/3): ").strip()
 
-        xored_data = bytes.fromhex(hex_data)
-        b64_bytes = bytes([b ^ xor_key[i % len(xor_key)] for i, b in enumerate(xored_data)])
-        b64 = b64_bytes.decode(errors='replace')
-
-        if len(b64) % 4 != 0:
-            b64 += "=" * (4 - len(b64) % 4)
-
-        token = base64.b64decode(b64).decode(errors='replace')
-
-        current_minute = int(time.time() // 60)
-        for minute_offset in range(-2, 3):
-            try_minute = current_minute + minute_offset
-            secondary_key = self.derive_secondary_key(try_minute)
-            fernet = Fernet(secondary_key)
+        if choice == "1":
+            message = input("Enter message to encrypt: ").strip()
+            encrypted = encryptor.encrypt_message(message)
+            print(f"\nEncrypted token:\n{encrypted}")
+        elif choice == "2":
+            token = input("Enter token to decrypt: ").strip()
             try:
-                payload = fernet.decrypt(token.encode()).decode()
-                minute_str, message = payload.split(self.SEPARATOR, 1)
-                return message, int(minute_str)
-            except Exception:
-                continue
+                message, key_minute = encryptor.decrypt_message(token)
+                print(f"\nDecrypted message: {message}")
+                print(f"Decryption key minute: {key_minute}")
+            except Exception as e:
+                print(f"Decryption failed: {e}")
+        elif choice == "3":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice, try again.")
 
-        raise ValueError("Unable to decrypt with any valid minute key.")
+
+if __name__ == "__main__":
+    main()
