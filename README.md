@@ -27,9 +27,14 @@ A simple web and terminal-based tool for encrypting and decrypting messages usin
    This will:
    - Create a virtual environment
    - Install required libraries
-   - Set the `PRIMARY_KEY` environment variable
 
-3. **Run the app**  
+3. **Set your primary key**  
+   On first run, a file named `.primary_key` will be created in the project directory containing your encryption key.  
+   - **Keep this key secret!** Anyone with access to this key can decrypt your messages.
+   - You can customize your key by editing the `.primary_key` file and replacing its contents with your own secure, random string (URL-safe, at least 32 characters).
+   - If you lose this key, you will not be able to decrypt previously encrypted messages.
+
+4. **Run the app**  
    ```bat
    run_app.bat
    ```
@@ -60,12 +65,14 @@ Follow the prompts to encrypt or decrypt messages.
 - [`tui.py`](tui.py ) — Terminal UI
 - [`index.html`](index.html ), [`static`](static ) — Web UI files
 - [`commands/windows`](commands/windows ) — Windows setup scripts
+- [`.primary_key`](.primary_key ) — Your secret encryption key (keep this safe!)
 
 ## Security
 
-- The primary key is stored as an environment variable (`PRIMARY_KEY`).
-- Do **not** share your primary key or tokens publicly.
+- The primary key is stored in the `.primary_key` file in your project directory.
+- **Keep your primary key secret and secure.** Do **not** share your primary key or tokens publicly.
+- You can change your key at any time by editing the `.primary_key` file, but old messages encrypted with the previous key will become unreadable.
 
 ## License
 
-Find the license in the LICENCE file in this direcory
+MIT License (see LICENCE file)
