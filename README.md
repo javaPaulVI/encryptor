@@ -1,78 +1,76 @@
 # Message Encryptor
 
-A simple web and terminal-based tool for encrypting and decrypting messages using a time-based key derivation scheme.
+A local tool for encrypting and decrypting messages using a time-based key derivation scheme. Includes both a web interface (via Flask) and a terminal-based interface.
 
 ## Features
 
-- **Web UI**: Encrypt and decrypt messages in your browser.
-- **Terminal UI**: Command-line interface for local encryption/decryption.
-- **Strong Encryption**: Uses PBKDF2, HMAC, and Fernet from the `cryptography` library.
-- **Time-based Keys**: Each message is encrypted with a key derived from the current minute.
+- **Web UI:** Encrypt and decrypt messages in your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000).
+- **Terminal UI:** Command-line interface for local encryption and decryption.
+- **Strong Encryption:** Uses PBKDF2, HMAC, and Fernet from the `cryptography` library.
+- **Time-based Keys:** Each message is encrypted with a key derived from the current minute.
+- **Primary Key Management:** Automatically generates and stores a primary key in `.primary_key` on first run.
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.7 or higher
 - pip
 
 ## Setup
 
-1. **Clone the repository**  
-   (or download and extract the ZIP)
+1. **Clone or Download the Repository**
 
-2. **Install dependencies and set up environment**  
-   On Windows, run:
-   ```bat
-   setup_project.bat
+   Download and extract the ZIP, or clone with:
+   ```sh
+   git clone <repo-url>
    ```
-   This will:
-   - Create a virtual environment
-   - Install required libraries
 
-3. **Set your primary key**  
-   On first run, a file named `.primary_key` will be created in the project directory containing your encryption key.  
-   - **Keep this key secret!** Anyone with access to this key can decrypt your messages.
-   - You can customize your key by editing the `.primary_key` file and replacing its contents with your own secure, random string (URL-safe, at least 32 characters).
-   - If you lose this key, you will not be able to decrypt previously encrypted messages.
+2. **Install and Run**
 
-4. **Run the app**  
+   Simply run:
    ```bat
    run_app.bat
    ```
    This will:
-   - Activate the virtual environment
+   - Set up the environment (if needed)
+   - Install the libraries (if needed)
    - Start the Flask web server
    - Open the app in your browser
+
+   > **Note:** You no longer need to manually activate a virtual environment or install dependencies separately.
+
+3. **Primary Key Setup**
+
+   On first run, a `.primary_key` file will be created in the project directory.  
+   - **Keep this key secret!** Anyone with access to this key can decrypt your messages.
+   - You can replace the contents of `.primary_key` with your own secure, random string (URL-safe, at least 32 characters).
+   - If you lose this key, you will not be able to decrypt previously encrypted messages.
 
 ## Usage
 
 ### Web Interface
 
-- Open [http://127.0.0.1:5000](http://127.0.0.1:5000)
-- Enter a message to encrypt or a token to decrypt.
+- Visit [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
+- Enter a message to encrypt, or paste a token to decrypt.
 
 ### Terminal Interface
 
-Run:
-```sh
-python tui.py
-```
-Follow the prompts to encrypt or decrypt messages.
+- Run `python tui.py` (if available) to use the terminal UI.
 
 ## File Structure
 
-- [`app.py`](app.py ) — Flask web server
-- [`encryptor.py`](encryptor.py ) — Encryption logic
-- [`tui.py`](tui.py ) — Terminal UI
-- [`index.html`](index.html ), [`static`](static ) — Web UI files
-- [`commands/windows`](commands/windows ) — Windows setup scripts
-- [`.primary_key`](.primary_key ) — Your secret encryption key (keep this safe!)
+- `app.py` — Flask web server
+- `encryptor.py` — Encryption logic
+- `tui.py` — Terminal UI
+- `index.html`, `static/` — Web UI files
+- `commands/windows/` — Windows setup scripts
+- `.primary_key` — Your secret encryption key (keep this safe!)
 
 ## Security
 
-- The primary key is stored in the `.primary_key` file in your project directory.
+- The primary key is stored in `.primary_key` in your project directory.
 - **Keep your primary key secret and secure.** Do **not** share your primary key or tokens publicly.
-- You can change your key at any time by editing the `.primary_key` file, but old messages encrypted with the previous key will become unreadable.
+- Changing the key will make old messages unreadable.
 
 ## License
 
-MIT License (see LICENCE file)
+MIT

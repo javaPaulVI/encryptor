@@ -7,18 +7,25 @@ import os
 
 def get_primary_key():
     KEY_FILE = ".primary_key"
-    if os.path.exists(KEY_FILE):
+    key = None
+    if os.path.isfile(KEY_FILE):
         with open(KEY_FILE, "r") as f:
-            return f.read().strip()
+            key = f.read().strip()
+   
     else:
+        print(f"Primary key file {KEY_FILE} not found. Creating {KEY_FILE} and generating a new key.")
+        key = secrets.token_urlsafe(32)
+        with open(KEY_FILE, "w") as f:
+            f.write(key)
+
+    if not key:
         key = secrets.token_urlsafe(32)
         print(f"Generated primary key: {key}")
         print(f"Saved primary key to {KEY_FILE}")
         print("For a custom primary key, change the content of the .primary_key file.")
         with open(KEY_FILE, "w") as f:
             f.write(key)
-        return key
-
+    return key
 
 app = Flask(__name__)
 

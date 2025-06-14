@@ -15,8 +15,8 @@ class Encryptor:
     SEPARATOR = "␟"  # Unicode U+241F, visible but rare
 
     def __init__(self, primary_key: str):
-        if len(primary_key) < 6:
-            raise ValueError("Primary key too short to modify as intended")
+        if not primary_key or len(primary_key) < 16:
+            raise ValueError("Primary key must be at least 16 characters long")
         self.primary_key = primary_key
 
     def generate_salt(self, minute: int) -> bytes:
@@ -26,12 +26,7 @@ class Encryptor:
     def derive_secondary_key(self, minute: int) -> bytes:
         salt = self.generate_salt(minute)
         minute_str = str(minute)
-        # Original modification of the primary key:
-        modified_key = (
-            self.primary_key[:4] + "6" +
-            self.primary_key[5:-2] + "<" +
-            self.primary_key[-1]
-        )
+
         # Insert minute string in the middle of modified_key
         mid = len(modified_key) // 2
         modified_key = modified_key[:mid] + minute_str + modified_key[mid:]
