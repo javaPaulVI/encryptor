@@ -76,4 +76,12 @@ You will find the documentation of the API in API.md in this directory
 
 ## License
 
-You can find the licence in the LICENCE file in this directory
+This project is licensed under the MIT License with an additional restriction for the API and Encryptor components:
+
+You can use, modify, and redistribute the software freely for private and non-commercial purposes, including open source projects.
+
+Commercial use of the API or encryptor — meaning use in any product or service sold, licensed, or otherwise monetized — is not allowed without explicit written permission from the author.
+
+If you modify and redistribute the API or encryptor, you must keep the same non-commercial restriction in place for those modified versions.
+
+For commercial licensing or permission requests, please contact: paul@be-hip.eu.

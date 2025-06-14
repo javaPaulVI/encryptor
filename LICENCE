@@ -1,11 +1,11 @@
-MIT License (with Non-Commercial API Clause)
+MIT License (with Non-Commercial Use Clause for API and Encryptor, including Modifications)
 
 Copyright (c) 2025 Paul Hipper
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+to use, copy, modify, merge, publish, distribute, sublicense, and/or 
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
@@ -22,6 +22,29 @@ SOFTWARE.
 
 ---
 
-**Additional API License Condition:**  
-The API provided by this software may be used in free and open source projects, provided that such use is strictly non-commercial.  
-Commercial use of the API, including but not limited to integration into products or services that are sold, licensed, or otherwise provided for a fee, is not permitted without explicit written permission from the copyright holder.
+Additional Use Condition for the API and Encryptor:
+
+For the purposes of this license, the terms "API" and "Encryptor" refer to the
+components, interfaces, or modules provided by the Software that enable interaction
+and encryption functionality.
+
+You may use the API and Encryptor freely for:
+
+- Private, personal projects,
+- Non-commercial projects, including open source projects,
+- Any use where you do NOT earn money from selling, licensing, or otherwise commercializing
+  a product or service incorporating the API or Encryptor.
+
+If you modify and redistribute the API or Encryptor (or any derivative works thereof),
+you must distribute those modifications under the same terms as stated here,
+including this non-commercial use restriction.
+
+Commercial use of the API or Encryptor, including but not limited to integration into
+products or services sold, licensed, or provided for a fee, requires explicit prior
+written permission from the copyright holder.
+
+"Commercial use" means any use primarily intended for commercial advantage or monetary
+compensation.
+
+If you wish to use the API or Encryptor commercially, please contact the copyright
+holder for licensing terms.
