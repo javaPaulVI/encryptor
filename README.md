@@ -21,7 +21,7 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
 
    Download and extract the ZIP, or clone with:
    ```sh
-   git clone <repo-url>
+   git clone https://github.com/javaPaulVI/encryptor.git
    ```
 
 2. **Install and Run**
@@ -71,6 +71,9 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
 - **Keep your primary key secret and secure.** Do **not** share your primary key or tokens publicly.
 - Changing the key will make old messages unreadable.
 
+## API
+You will find the documentation of the API in API.md in this directory
+
 ## License
 
-MIT
+You can find the licence in the LICENCE file in this directory

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
-from encryptor import Encryptor  # Import your Encryptor class
+from encryptor import Encryptor
 import secrets
 import os
 
@@ -28,7 +28,6 @@ def get_primary_key():
     return key
 
 app = Flask(__name__)
-
 primary_key = get_primary_key()
 encryptor = Encryptor(primary_key)
 
@@ -37,7 +36,7 @@ encryptor = Encryptor(primary_key)
 
 @app.route('/')
 def index():
-    # Serve index.html from the same directory as this app.py file
+
     return send_from_directory('.', 'index.html')
 
 @app.route('/encrypt', methods=['POST'])
