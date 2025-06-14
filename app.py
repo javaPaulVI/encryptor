@@ -1,3 +1,4 @@
+import random
 from flask import Flask, request, jsonify, send_from_directory
 from encryptor import Encryptor
 import secrets
@@ -41,23 +42,36 @@ def index():
 
 @app.route('/encrypt', methods=['POST'])
 def encrypt():
+    file_content = False
     data = request.json
     message = data.get('message', '')
     try:
+        if os.path.isfile(message):
+            with open(message, 'r') as file:
+                file_content = True
+                message = file.readlines()
+                message = ''.join(message).strip()
         encrypted = encryptor.encrypt_message(message)
-        return jsonify({"encrypted": encrypted})
+        return jsonify({"encrypted": encrypted+str(random.randint(0, 4)) if file_content else encrypted+str(random.randint(5, 9))})
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
 
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
+    file_content = False
     data = request.json
     token = data.get('token', '')
+    if int(token[-1]) in range(0,5):
+        file_content = True
+    elif int(token[-1]) in range(5,10):
+        file_content = False
+    token = token[:-1]
+
     try:
         message, timestamp = encryptor.decrypt_message(token)
-        return jsonify({"message": message, "timestamp": timestamp})
+        return jsonify({"message": "Message: "+message, "timestamp": timestamp} if not file_content else {"message": "Message from File:\n\n"+message, "timestamp": timestamp})
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=1449)

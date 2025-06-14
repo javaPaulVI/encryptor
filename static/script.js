@@ -39,7 +39,7 @@ async function decryptMessage() {
   const output = document.getElementById('decryptedOutput');
 
   if (!token.trim()) {
-    output.textContent = "Please enter a token to decrypt.";
+    output.innerHTML = `<div id="Error" class="output-box">Please Enter a token to decrypt</div>`;
     return;
   }
 
@@ -53,11 +53,12 @@ async function decryptMessage() {
     const data = await response.json();
 
     if (response.ok) {
-      output.textContent = `Message: ${data.message}\nTimestamp: ${data.timestamp}`;
+      output.innerHTML = `        <div id="decryptedOutputMessage" class="output-box">${data.message}</div>
+        <div id="decryptedOutputTime" class="output-box">Time of Encryption: ${new Date(data.timestamp).toLocaleString()}</div>`;
     } else {
-      output.textContent = `Error: ${data.error}`;
+      output.innerHTML = `<div id="Error" class="output-box">Error: ${data.error}</div>`;
     }
   } catch (error) {
-    output.textContent = `Network error: ${error.message}`;
+    output.innerHTML = `<div id="Error" class="output-box">Network error: ${error.message}</div>`;
   }
 }

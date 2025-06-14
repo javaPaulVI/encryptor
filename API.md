@@ -1,6 +1,6 @@
 # Message Encryptor API Documentation
 
-This API allows you to encrypt and decrypt messages using a time-based key derivation scheme. It is intended for local use only.
+This API allows you to encrypt and decrypt messages using a time-based key derivation scheme. It is intended for local use only. With modification it can be transformed to a server-based API.
 
 ## Base URL
 
@@ -9,6 +9,12 @@ http://localhost:1555
 ```
 
 ---
+
+## Usage
+
+Before querying the API run api.py first then use the Base URL 
+
+
 
 ## Endpoints
 
