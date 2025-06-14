@@ -8,11 +8,11 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 import sys
-sys.set_int_max_str_digits(10_000)  # increase from default 4300 to 10,000 digits
+sys.set_int_max_str_digits(10_000)  
 
 
 class Encryptor:
-    SEPARATOR = "␟"  # Unicode U+241F, visible but rare
+    SEPARATOR = "␟"  
 
     def __init__(self, primary_key: str):
         if not primary_key or len(primary_key) < 16:
@@ -24,22 +24,17 @@ class Encryptor:
         return h.digest()[:16]
 
     def derive_secondary_key(self, minute: int) -> bytes:
-        salt = self.generate_salt(minute)
-        minute_str = str(minute)
-
-        # Insert minute string in the middle of modified_key
-        mid = len(modified_key) // 2
-        modified_key = modified_key[:mid] + minute_str + modified_key[mid:]
-
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
-            salt=salt,
-            iterations=100_000,
-            backend=default_backend()
-        )
-        derived = kdf.derive(modified_key.encode())
-        return base64.urlsafe_b64encode(derived)
+       salt = self.generate_salt(minute)
+       minute_str = str(minute)
+    
+       kdf = PBKDF2HMAC(
+           algorithm=hashes.SHA256(),
+           length=32,
+           salt=salt,
+           iterations=100_000,
+           backend=default_backend()
+       )
+       return base64.urlsafe_b64encode(kdf.derive(minute_str.encode()))
 
     def token_to_numbers(self, token: str) -> str:
         token_bytes = token.encode()
