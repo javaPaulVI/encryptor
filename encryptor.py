@@ -8,7 +8,10 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 import sys
-sys.set_int_max_str_digits(100_000_000)  
+
+
+if sys.version_info >= (3, 11):
+    sys.set_int_max_str_digits(0)
 
 
 class Encryptor:

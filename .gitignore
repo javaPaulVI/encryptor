@@ -1,3 +1,7 @@
 venv/
 __pycache__/
 .primary_key
+
+test.md
+test.py
+test.bat

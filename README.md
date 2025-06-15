@@ -24,19 +24,9 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
    git clone https://github.com/javaPaulVI/encryptor.git
    ```
 
-2. **Add the Executable to `Path`**
-
-   Add the Executable `message-encryptor.exe` by using the command
-   ```bash
-   Path command win
-   ```
-   on Windows or on Unix Machines
-   ```bash
-   Path command unix
-   ```
 
 
-3. **Install and Run**
+2. **Install and Run**
 
    Simply run: `message-encryptor` in your terminal
 
@@ -48,7 +38,7 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
 
    > **Note:** You no longer need to manually activate a virtual environment or install dependencies separately. The program will do that if needed
 
-4. **Primary Key Setup**
+3. **Primary Key Setup**
 
    On first run, a `.primary_key` file will be created in the project directory if it isn't already there and a random key will be generated
    - **Be cautious with sharing the key!** Anyone with access to this key can decrypt your messages.
@@ -61,7 +51,7 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
 
 The application will run on
 ```
-http://localhost:1449
+http://localhost:1556
 ```
 
 To run the Web interface:
