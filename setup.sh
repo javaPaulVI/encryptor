@@ -6,7 +6,7 @@ set -e
 # Get the directory of this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-chmod +x "$SCRIPT_DIR/setup.sh"
+
 
 # Check if SCRIPT_DIR is in the permanent PATH from a fresh interactive shell
 permanent_path=$(bash -ic 'echo $PATH' 2>/dev/null || echo "")
@@ -20,8 +20,6 @@ if [[ ":$permanent_path:" != *":$SCRIPT_DIR:"* ]]; then
     if ! grep -Fxq "export PATH=\"\$PATH:$SCRIPT_DIR\"" ~/.bashrc; then
         echo "export PATH=\"\$PATH:$SCRIPT_DIR\"" >> ~/.bashrc
     fi
-else
-    echo "$SCRIPT_DIR already in permanent PATH, no changes made"
 fi
 
 # Path to venv activate script

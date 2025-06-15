@@ -29,7 +29,6 @@ def get_primary_key():
 
 def main():
     primary_key = get_primary_key()
-    print(f"Using primary key: {primary_key}")
     try:
         encryptor = Encryptor(primary_key)
     except ValueError as e:
@@ -51,19 +50,18 @@ def main():
                 with open(message, 'r') as file:
                     message = file.readlines()
                 message = ''.join(message).strip()
-            
             encrypted = encryptor.encrypt_message(message)
             print(f"\nEncrypted token:\n{encrypted+str(random.randint(0, 4)) if file_content else encrypted+str(random.randint(5, 9))}")
         elif choice == "2":
             file_content = False
             token = input("Enter token to decrypt: ").strip()
             try:
-                message,_ = encryptor.decrypt_message(token)
                 if int(token[-1]) in range(0, 5):
                     file_content = True
                 elif int(token[-1]) in range(5, 10):
                     file_content = False
                 token = token[:-1]
+                message, _ = encryptor.decrypt_message(token)
                 print(f"\nDecrypted message: {message}" if not file_content else f"Decrypted message from File:\n\n{message}")
             except Exception as e:
                 print(f"Decryption failed: {e}")
