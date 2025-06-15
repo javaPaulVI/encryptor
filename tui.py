@@ -2,11 +2,31 @@ from encryptor import Encryptor
 import os
 import random
 
+def get_primary_key():
+    KEY_FILE = ".primary_key"
+    key = None
+    if os.path.isfile(KEY_FILE):
+        with open(KEY_FILE, "r") as f:
+            key = f.read().strip()
+    else:
+        print(f"Primary key file {KEY_FILE} not found. Creating {KEY_FILE} and generating a new key.")
+        key = secrets.token_urlsafe(32)
+        with open(KEY_FILE, "w") as f:
+            f.write(key)
+
+    if not key:
+        key = secrets.token_urlsafe(32)
+        print(f"Generated primary key: {key}")
+        print(f"Saved primary key to {KEY_FILE}")
+        print("For a custom primary key, change the content of the .primary_key file.")
+        with open(KEY_FILE, "w") as f:
+            f.write(key)
+    return key
+
+
 
 def main():
-    primary_key = None
-    with open(".primary_key", "r") as f:
-        primary_key = f.read().strip()
+    primary_key = get_primary_key()
     if not primary_key:
         print("Error: PRIMARY_KEY environment variable not set.")
         return
