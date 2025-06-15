@@ -18,8 +18,6 @@ class Encryptor:
     SEPARATOR = "␟"  
 
     def __init__(self, primary_key: str):
-        if not primary_key or len(primary_key) < 16:
-            raise ValueError("Primary key must be at least 16 characters long")
         self.primary_key = primary_key
 
     def generate_salt(self, minute: int) -> bytes:
