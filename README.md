@@ -4,7 +4,7 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
 
 ## Features
 
-- **Web UI:** Encrypt and decrypt messages in your browser 
+- **Web UI:** Encrypt and decrypt messages in your browser.
 - **Terminal UI:** Command-line interface for local encryption and decryption.
 - **Strong Encryption:** Uses PBKDF2, HMAC, and Fernet from the `cryptography` library.
 - **Time-based Keys:** Each message is encrypted with a key derived from the current minute.
@@ -47,8 +47,15 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
 
 ### Web Interface
 
-- Just run `Message-Encryptor.exe`
-- After the Browser with the interface pops up you are good to go
+The application will run on
+```
+http://localhost:1449
+```
+
+To run the Web interface:
+
+- Run `Message-Encryptor.exe`
+- After the Browser with the interface opens the application is ready to use
 
 ### Terminal Interface
 
