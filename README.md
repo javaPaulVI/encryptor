@@ -1,7 +1,7 @@
 # Message Encryptor
 
 A local tool for encrypting and decrypting messages using a time-based key derivation scheme. Includes both a web interface (via Flask) and a terminal-based interface.
-
+>Disclaimer: The app hasn't been tested on Mac and Linux, only for Windows! No guarantee of running!
 ## Features
 
 - **Web UI:** Encrypt and decrypt messages in your browser.
@@ -24,9 +24,21 @@ A local tool for encrypting and decrypting messages using a time-based key deriv
    git clone https://github.com/javaPaulVI/encryptor.git
    ```
 
+2. **Add the Executable to `Path`**
+
+   Add the Executable `message-encryptor.exe` by using the command
+   ```bash
+   Path command win
+   ```
+   on Windows or on Unix Machines
+   ```bash
+   Path command unix
+   ```
+
+
 3. **Install and Run**
 
-   Simply run: `Message-Encryptor.exe` in the current directory
+   Simply run: `message-encryptor` in your terminal
 
    This will:
    - Set up the environment (if needed)
@@ -54,8 +66,8 @@ http://localhost:1449
 
 To run the Web interface:
 
-- Run `Message-Encryptor.exe`
-- After the Browser with the interface opens the application is ready to use
+- Run `message-encryptor` in your terminal to start the app
+- After the Browser with the interface opens, the application is ready to use
 
 ### Terminal Interface
 
