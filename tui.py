@@ -4,11 +4,13 @@ import random
 
 
 def main():
-    primary_key = os.environ.get('PRIMARY_KEY')
+    primary_key = None
+    with open(".primary_key", "r") as f:
+        primary_key = f.read().strip()
     if not primary_key:
         print("Error: PRIMARY_KEY environment variable not set.")
         return
-
+    print(f"Using primary key: {primary_key}")
     try:
         encryptor = Encryptor(primary_key)
     except ValueError as e:
