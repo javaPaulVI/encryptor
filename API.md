@@ -12,7 +12,7 @@ http://localhost:1555
 
 ## Usage
 
-Before querying the API run api.py first then use the Base URL 
+Before querying the API, run api.py first then use the Base URL for POST requests
 
 
 
@@ -65,6 +65,7 @@ Decrypt a token with a provided primary key.
 
 ### Python Example
 
+You can make requests to the API  using the module `requests`
 ````python
 import requests
 
