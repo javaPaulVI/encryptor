@@ -12,7 +12,6 @@ def get_primary_key():
     if os.path.isfile(KEY_FILE):
         with open(KEY_FILE, "r") as f:
             key = f.read().strip()
-   
     else:
         print(f"Primary key file {KEY_FILE} not found. Creating {KEY_FILE} and generating a new key.")
         key = secrets.token_urlsafe(32)
