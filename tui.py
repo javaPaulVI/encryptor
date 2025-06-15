@@ -1,6 +1,7 @@
 from encryptor import Encryptor
 import os
 import random
+import secrets
 
 def get_primary_key():
     KEY_FILE = ".primary_key"
