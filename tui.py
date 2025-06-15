@@ -2,6 +2,7 @@ from encryptor import Encryptor
 import os
 import random
 import secrets
+import sys
 
 def get_primary_key():
     KEY_FILE = ".primary_key"
@@ -28,9 +29,6 @@ def get_primary_key():
 
 def main():
     primary_key = get_primary_key()
-    if not primary_key:
-        print("Error: PRIMARY_KEY environment variable not set.")
-        return
     print(f"Using primary key: {primary_key}")
     try:
         encryptor = Encryptor(primary_key)
@@ -49,9 +47,11 @@ def main():
             file_content = False
             message = input("Enter message to encrypt: ").strip()
             if os.path.isfile(message):
+                file_content = True
                 with open(message, 'r') as file:
                     message = file.readlines()
                 message = ''.join(message).strip()
+            
             encrypted = encryptor.encrypt_message(message)
             print(f"\nEncrypted token:\n{encrypted+str(random.randint(0, 4)) if file_content else encrypted+str(random.randint(5, 9))}")
         elif choice == "2":
@@ -75,4 +75,8 @@ def main():
 
 
 if __name__ == "__main__":
+    exit_code=os.system('setup.bat' if os.name == 'nt' else 'setup.sh')
+    if exit_code != 0:
+        sys.exit(exit_code)
+    os.system('cls' if os.name == 'nt' else 'clear')
     main()
