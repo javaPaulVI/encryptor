@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Encryptor</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Encryptor</h1>
+
+      <label for="messageInput">Message to encrypt:</label>
+      <textarea
+        id="messageInput"
+        rows="3"
+        placeholder="Type your message here..."
+      ></textarea>
+
+      <button id="encryptBtn">Encrypt</button>
+
+      <label for="encryptedOutput">Encrypted:</label>
+      <div id="encryptedOutput" class="output-box"></div>
+
+      <label for="tokenInput">Token to decrypt:</label>
+      <textarea
+        id="tokenInput"
+        rows="3"
+        placeholder="Paste your token here..."
+      ></textarea>
+
+      <button id="decryptBtn">Decrypt</button>
+
+      <label for="decryptedOutput">Decrypted message and time:</label>
+      <div id="decryptedOutput">
+        <div id="decryptedOutputMessage" class="output-box"></div>
+        <div id="decryptedOutputTime" class="output-box"></div>
+      </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
+  </body>
+</html>
